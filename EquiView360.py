@@ -59,35 +59,53 @@ class Window(QDialog):
         frameRect.moveCenter(centerPoint)
         self.move(frameRect.topLeft())
 
+
+
     def createMenu(self):
         menubar = QMenuBar(self)
-        fileMenu = menubar.addMenu('File')
-
-        selectImageAction = QAction('Select Another Image', self)
+        MenuFile = menubar.addMenu('Файл')
+        MenuProjection = menubar.addMenu('Проекции')
+        
+        
+        selectImageAction = QAction('Выбрать другое изображение', self)
         selectImageAction.triggered.connect(self.selectImage)
-        fileMenu.addAction(selectImageAction)
+        MenuFile.addAction(selectImageAction)
+        
+        # ------------------ MenuConvertTOformat
+        MenuConvertTOformat = MenuFile.addMenu('Перевести в формат')
 
-        resetAction = QAction('Reset View', self)
-        resetAction.triggered.connect(self.resetView)
-        fileMenu.addAction(resetAction)
-
-        projectionMenu = fileMenu.addMenu('Projection')
-
-        equirectAction = QAction('Equirectangular', self)
+        equirectAction = QAction('Из эквидистантной  в кубическую', self)
         equirectAction.triggered.connect(self.selectEquirectProjection)
-        projectionMenu.addAction(equirectAction)
+        MenuConvertTOformat.addAction(equirectAction)
 
-        cubeAction = QAction('Cube', self)
+        cubeAction = QAction('Из кубической в эквидистантную', self)
         cubeAction.triggered.connect(self.selectCubeProjection)
-        projectionMenu.addAction(cubeAction)
+        MenuConvertTOformat.addAction(cubeAction)
+        
+        # ------------------
 
-        helpAction = QAction('Help', self)
+        resetAction = QAction('Начальный вид', self)
+        resetAction.triggered.connect(self.resetView)
+        menubar.addAction(resetAction)
+        
+        # ----------------- MenuProjection
+        equirectAction = QAction('Эквидистантная', self)
+        equirectAction.triggered.connect(self.selectEquirectProjection)
+        MenuProjection.addAction(equirectAction)
+
+        cubeAction = QAction('Кубическая', self)
+        cubeAction.triggered.connect(self.selectCubeProjection)
+        MenuProjection.addAction(cubeAction)
+        
+        # ------------------
+
+        helpAction = QAction('Помощь', self)
         helpAction.triggered.connect(self.showHelp)
-        fileMenu.addAction(helpAction)
+        MenuFile.addAction(helpAction)
 
-        aboutAction = QAction('About', self)
+        aboutAction = QAction('О программе', self)
         aboutAction.triggered.connect(self.showAbout)
-        fileMenu.addAction(aboutAction)
+        MenuFile.addAction(aboutAction)
 
 
         layout = self.layout()  # Get the dialog layout

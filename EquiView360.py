@@ -2,6 +2,7 @@ import os
 import sys
 import cv2
 import platform
+import logging
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPixmap, QImage, QIcon
@@ -9,6 +10,7 @@ from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QDesktopWidget, QFile
 
 import Equirec2Perspec as E2P
 import CubeProjection as CP
+import convert360 as convert
 
 # Linux systems need this env var
 if platform.system() == 'Linux':
@@ -16,6 +18,7 @@ if platform.system() == 'Linux':
 
 class Window(QDialog):
     def __init__(self):
+        logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
         super().__init__()
         self.title = "Equirectangular 360° Viewer"
         self.pos = QPoint(0, 0)
@@ -75,11 +78,11 @@ class Window(QDialog):
         MenuConvertTOformat = MenuFile.addMenu('Перевести в формат')
 
         equirectAction = QAction('Из эквидистантной  в кубическую', self)
-        equirectAction.triggered.connect(self.selectEquirectProjection)
+        equirectAction.triggered.connect(self.SaveEquiToCubic)
         MenuConvertTOformat.addAction(equirectAction)
 
         cubeAction = QAction('Из кубической в эквидистантную', self)
-        cubeAction.triggered.connect(self.selectCubeProjection)
+        cubeAction.triggered.connect(self.SaveCubicToEqui)
         MenuConvertTOformat.addAction(cubeAction)
         
         # ------------------
@@ -110,6 +113,45 @@ class Window(QDialog):
 
         layout = self.layout()  # Get the dialog layout
         layout.setMenuBar(menubar)  # Set the menu bar in the layout
+    
+    
+    def SaveEquiToCubic(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Image Files (*.png *.jpg *.bmp)", options=options)
+        
+        # height = self.height
+        height = 1440
+        new_name_file = "results/" + os.path.basename(file_path)
+        
+        logging.info(f'new_name_file = {new_name_file}')
+        logging.info(f'hight = {height}')
+        logging.info(f'file_path = {file_path}')
+        
+        convert.SaveEquiToCubic_convert(height=height, file_path=file_path, new_name_file=new_name_file)
+        
+    def SaveCubicToEqui(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Image Files (*.png *.jpg *.bmp)", options=options)
+        
+        new_name_file = "results/" + os.path.basename(file_path)
+        # width = self.width 
+        # height = self.height
+        width = 2160
+        height = 1440
+        logging.info(f'new_name_file = {new_name_file}')
+        logging.info(f'hight = {height}')
+        logging.info(f'width = {width}')
+        logging.info(f'file_path = {file_path}')
+        
+        convert.SaveCubicToEqui_convert(file_path, new_name_file, width, height)
+
+        
+        
+
+        
+        
     
     def resetView(self):
         self.fov = 100

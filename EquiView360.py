@@ -18,8 +18,8 @@ if platform.system() == 'Linux':
 
 class Window(QDialog):
     def __init__(self):
-        # logging.basicConfig(filename='logs.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
         super().__init__()
+        self.check_dir()
         self.logger = Logger()
         self.title = "Equirectangular 360° Viewer"
         self.pos = QPoint(0, 0)
@@ -42,7 +42,6 @@ class Window(QDialog):
         layout = QVBoxLayout(self)  # Create a layout for the dialog
         self.setLayout(layout)
         
-
         self.labelImage = QLabel(self)
         layout.addWidget(self.labelImage)  # Add the label to the layout
 
@@ -63,7 +62,6 @@ class Window(QDialog):
         
         if self.equ is None:
             self.selectEquirectProjection()  # Automatically select Equirectangular projection on first launch
-
 
     def centerWindow(self):
         frameRect = self.frameGeometry()
@@ -116,7 +114,6 @@ class Window(QDialog):
         aboutAction.triggered.connect(self.showAbout)
         MenuFile.addAction(aboutAction)
 
-
         layout = self.layout()  # Get the dialog layout
         layout.setMenuBar(menubar)  # Set the menu bar in the layout
     
@@ -130,9 +127,9 @@ class Window(QDialog):
         height = 1440
         new_name_file = "results/" + os.path.basename(file_path)
         
-        self.logger.full_logs(f'new_name_file = {new_name_file}')
-        self.logger.full_logs(f'hight = {height}')
-        self.logger.full_logs(f'file_path = {file_path}')
+        self.logger.math_equirec_logs(f'new_name_file = {new_name_file}')
+        self.logger.math_equirec_logs(f'hight = {height}')
+        self.logger.math_equirec_logs(f'file_path = {file_path}')
         
         convert.SaveEquiToCubic_convert(height=height, file_path=file_path, new_name_file=new_name_file)
         
@@ -142,22 +139,14 @@ class Window(QDialog):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Image", "", "Image Files (*.png *.jpg *.bmp)", options=options)
         
         new_name_file = "results/" + os.path.basename(file_path)
-        # width = self.width 
-        # height = self.height
         width = 2160
         height = 1440
-        # logging.info(f'new_name_file = {new_name_file}')
-        # logging.info(f'hight = {height}')
-        # logging.info(f'width = {width}')
-        # logging.info(f'file_path = {file_path}')
         
-        convert.SaveCubicToEqui_convert(file_path, new_name_file, width, height)
-
+        self.logger.math_cubic_logs(f'new_name_file = {new_name_file}')
+        self.logger.math_cubic_logs(f'hight = {height}')
+        self.logger.math_cubic_logs(f'file_path = {file_path}')
         
-        
-
-        
-        
+        convert.SaveCubicToEqui_convert(file_path, new_name_file, width, height)        
     
     def resetView(self):
         self.fov = 100
@@ -263,6 +252,11 @@ class Window(QDialog):
 
     def showAbout(self):
         QMessageBox.about(self, "About", "Your application description here.")
+        
+    def check_dir(self):
+        log_folder = 'results'
+        if not os.path.exists(log_folder):
+            os.makedirs(log_folder)
     
 # Launch the application
 if __name__ =='__main__':

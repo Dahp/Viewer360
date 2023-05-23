@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QDesktopWidget, QFile
 import Equirec2Perspec as E2P
 import CubeProjection as CP
 import convert360 as convert
+from logger import Logger
 
 # Linux systems need this env var
 if platform.system() == 'Linux':
@@ -18,16 +19,20 @@ if platform.system() == 'Linux':
 
 class Window(QDialog):
     def __init__(self):
-        logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
+        # logging.basicConfig(filename='logs.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
         super().__init__()
+        self.logger = Logger()
+        
+        
         self.title = "Equirectangular 360° Viewer"
+        
         self.pos = QPoint(0, 0)
         self.fov = 100
         self.width = 1080
         self.height = 720
         self.setFixedSize(self.width, self.height)
         self.equ = None  # Initialize equ attribute as None
-        self.equ = None
+        self.cube = None
         self.InitWindow()
 
     def InitWindow(self):
@@ -124,9 +129,9 @@ class Window(QDialog):
         height = 1440
         new_name_file = "results/" + os.path.basename(file_path)
         
-        logging.info(f'new_name_file = {new_name_file}')
-        logging.info(f'hight = {height}')
-        logging.info(f'file_path = {file_path}')
+        self.logger.full_logs(f'new_name_file = {new_name_file}')
+        self.logger.full_logs(f'hight = {height}')
+        self.logger.full_logs(f'file_path = {file_path}')
         
         convert.SaveEquiToCubic_convert(height=height, file_path=file_path, new_name_file=new_name_file)
         
@@ -140,10 +145,10 @@ class Window(QDialog):
         # height = self.height
         width = 2160
         height = 1440
-        logging.info(f'new_name_file = {new_name_file}')
-        logging.info(f'hight = {height}')
-        logging.info(f'width = {width}')
-        logging.info(f'file_path = {file_path}')
+        # logging.info(f'new_name_file = {new_name_file}')
+        # logging.info(f'hight = {height}')
+        # logging.info(f'width = {width}')
+        # logging.info(f'file_path = {file_path}')
         
         convert.SaveCubicToEqui_convert(file_path, new_name_file, width, height)
 

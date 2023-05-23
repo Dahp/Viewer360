@@ -2,7 +2,6 @@ import os
 import sys
 import cv2
 import platform
-import logging
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPixmap, QImage, QIcon
@@ -22,10 +21,7 @@ class Window(QDialog):
         # logging.basicConfig(filename='logs.log', level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
         super().__init__()
         self.logger = Logger()
-        
-        
         self.title = "Equirectangular 360° Viewer"
-        
         self.pos = QPoint(0, 0)
         self.fov = 100
         self.width = 1080
@@ -34,6 +30,9 @@ class Window(QDialog):
         self.equ = None  # Initialize equ attribute as None
         self.cube = None
         self.InitWindow()
+        
+        self.logger.full_logs(f"__init__ success with param width = {self.width} and height = {self.height}")
+        self.logger.short_logs(f"__init__ success with param width = {self.width} and height = {self.height}")
 
     def InitWindow(self):
         self.setWindowTitle(self.title)
@@ -42,6 +41,7 @@ class Window(QDialog):
 
         layout = QVBoxLayout(self)  # Create a layout for the dialog
         self.setLayout(layout)
+        
 
         self.labelImage = QLabel(self)
         layout.addWidget(self.labelImage)  # Add the label to the layout
@@ -52,8 +52,12 @@ class Window(QDialog):
         layout.addWidget(self.progressBar)  # Add the progress bar to the layout
 
         self.createMenu()
+        self.logger.full_logs("createMenu() succes")
+        self.logger.short_logs("createMenu() succes")
 
         self.show()
+        self.logger.full_logs("show() succes")
+        self.logger.short_logs("show() succes")
 
         # self.selectImage()
         
@@ -67,14 +71,11 @@ class Window(QDialog):
         frameRect.moveCenter(centerPoint)
         self.move(frameRect.topLeft())
 
-
-
     def createMenu(self):
-        menubar = QMenuBar(self)
+        menubar = QMenuBar(self) 
         MenuFile = menubar.addMenu('Файл')
         MenuProjection = menubar.addMenu('Проекции')
-        
-        
+                
         selectImageAction = QAction('Выбрать другое изображение', self)
         selectImageAction.triggered.connect(self.selectImage)
         MenuFile.addAction(selectImageAction)

@@ -6,6 +6,8 @@ from PIL import Image
 
 import py360convert
 
+# написать это как класс Convert
+
 def SaveEquiToCubic_convert(file_path, height, new_name_file):
     img = np.array(Image.open(file_path))
     if len(img.shape) == 2:

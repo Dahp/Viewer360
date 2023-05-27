@@ -2,6 +2,8 @@ import numpy as np
 from scipy.ndimage import map_coordinates
 
 
+# TODO: сделать это классом MathForConvert
+
 def xyzcube(face_w):
     '''
     Return the xyz cordinates of the unit cube in [F R B L U D] format.

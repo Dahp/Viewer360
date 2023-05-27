@@ -2,6 +2,7 @@ import numpy as np
 
 from . import utils
 
+# TODO: сделать это классом E2C
 
 def e2c(e_img, face_w=256, mode='bilinear', cube_format='dice'):
     '''

@@ -2,6 +2,7 @@ import numpy as np
 
 from . import utils
 
+# TODO: сделать это классом C2E
 
 def c2e(cubemap, h, w, mode='bilinear', cube_format='dice'):
     if mode == 'bilinear':
